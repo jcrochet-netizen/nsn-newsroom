@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '*/20 * * * *'   # toutes les 20 min (GitHub peut décaler de quelques minutes)
+    - cron: '7,27,47 * * * *'   # toutes les 20 min, hors heures rondes (créneaux surchargés chez GitHub, souvent retardés)
   workflow_dispatch:          # bouton « Run workflow » dans l'onglet Actions
 
 permissions:
