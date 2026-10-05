@@ -219,7 +219,8 @@ let pollTimer;
 async function load(force) {
   clearTimeout(pollTimer);
   try {
-    const res = await fetch('/api/items' + (force ? '?force=1' : ''));
+    // version GitHub Pages : données pré-générées dans data.json (voir build.js)
+    const res = await fetch(window.NSN_STATIC ? 'data.json?t=' + Date.now() : '/api/items' + (force ? '?force=1' : ''));
     data = await res.json();
     render(); setStatus();
   } catch (e) { $('#status').textContent = 'Serveur injoignable'; }

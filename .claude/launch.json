@@ -1,6 +1,22 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "newsroom", "runtimeExecutable": "node", "runtimeArgs": ["server.js"], "port": 4317 }
+    {
+      "name": "newsroom",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "server.js"
+      ],
+      "port": 4317
+    },
+    {
+      "name": "pages-preview",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "-e",
+        "const h=require('http'),f=require('fs'),p=require('path');const d=p.join(process.cwd(),'dist');h.createServer((q,r)=>{let u=decodeURIComponent(q.url.split('?')[0]);if(u.endsWith('/'))u+='index.html';f.readFile(p.join(d,u),(e,b)=>{if(e){r.writeHead(404);return r.end()}r.writeHead(200,{'Content-Type':u.endsWith('.json')?'application/json':'text/html; charset=utf-8'});r.end(b)})}).listen(4318)"
+      ],
+      "port": 4318
+    }
   ]
 }

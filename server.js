@@ -24,12 +24,15 @@ function loadExcludeRe() {
 let pageCache = {};
 try { pageCache = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8')); } catch {}
 let saveTimer = null;
+function trimCache() {
+  const entries = Object.entries(pageCache).sort((a, b) => (b[1].t || 0) - (a[1].t || 0)).slice(0, 3000);
+  pageCache = Object.fromEntries(entries);
+}
+function flushCache() { trimCache(); fs.writeFileSync(CACHE_FILE, JSON.stringify(pageCache)); }
 function saveCache() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
-    // on ne garde que les 3000 entrées les plus récentes
-    const entries = Object.entries(pageCache).sort((a, b) => (b[1].t || 0) - (a[1].t || 0)).slice(0, 3000);
-    pageCache = Object.fromEntries(entries);
+    trimCache(); // on ne garde que les 3000 entrées les plus récentes
     fs.writeFile(CACHE_FILE, JSON.stringify(pageCache), () => {});
   }, 1000);
 }
@@ -170,9 +173,12 @@ function pump() {
     fetchText(url)
       .then(html => { pageCache[url] = { ...extractFromPage(html), t: Date.now() }; })
       .catch(() => { pageCache[url] = { words: null, image: '', t: Date.now(), err: true }; })
-      .finally(() => { active--; queued.delete(url); saveCache(); pump(); });
+      .finally(() => { active--; queued.delete(url); saveCache(); pump(); if (!active && !queue.length) drainWaiters.splice(0).forEach(f => f()); });
   }
 }
+// résolu quand toutes les pages en attente ont été lues (utilisé par build.js)
+const drainWaiters = [];
+const drain = () => (!active && !queue.length) ? Promise.resolve() : new Promise(r => drainWaiters.push(r));
 
 // ---------- état des flux ----------
 const state = { items: [], errors: {}, fetchedAt: null, refreshing: null };
@@ -228,8 +234,12 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => {
-  console.log(`NSN Newsroom → http://localhost:${PORT}`);
-  refresh();
-  setInterval(refresh, REFRESH_MS);
-});
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`NSN Newsroom → http://localhost:${PORT}`);
+    refresh();
+    setInterval(refresh, REFRESH_MS);
+  });
+}
+
+module.exports = { refresh, drain, snapshot, flushCache };
