@@ -1,0 +1,19 @@
+[
+  { "id": "afrik-foot",        "name": "Afrik-Foot",            "feed": "https://afrik-foot.com/feed/",                "color": "#5fcf5f" },
+  { "id": "afrik-foot-ng",     "name": "Afrik-Foot NG",         "feed": "https://afrik-foot.com/en-ng/feed/",          "color": "#008751" },
+  { "id": "afrik-foot-za",     "name": "Afrik-Foot ZA",         "feed": "https://afrik-foot.com/en-za/feed/",          "color": "#7b4a2a" },
+  { "id": "alairelibre",       "name": "Al Aire Libre",         "feed": "https://alairelibre.cl/feed/",                "color": "#1cc7c1" },
+  { "id": "soccernet",         "name": "Soccernet",             "feed": "https://soccernet.ng/feed/",                  "color": "#2a9d8f" },
+  { "id": "topmercato",        "name": "TopMercato",            "feed": "https://topmercato.com/feed/",                "color": "#c1121f" },
+  { "id": "footballwhispers",  "name": "Football Whispers",     "feed": "https://footballwhispers.com/feed/",          "color": "#8d939c" },
+  { "id": "sportsmole",        "name": "Sports Mole",           "feed": "https://www.sportsmole.co.uk/rss.xml",        "color": "#006a4e" },
+  { "id": "trivela",           "name": "Trivela",               "feed": "https://trivela.com.br/feed/",                "color": "#ff1a1a" },
+  { "id": "footballgroundguide","name": "Football Ground Guide","feed": "https://footballgroundguide.com/feed/",       "color": "#14213d" },
+  { "id": "umdoisesportes",    "name": "Um Dois Esportes",      "feed": "https://umdoisesportes.com.br/feed/",         "color": "#f5b700" },
+  { "id": "vringe",            "name": "vRINGe",                "feed": "https://vringe.com/export/rss/all.xml",       "color": "#111111" },
+  { "id": "calciodangolo",     "name": "Calcio d'Angolo",       "feed": "https://calciodangolo.com/feed/",             "color": "#1d4ed8" },
+  { "id": "solobasket",        "name": "Solobasket",            "feed": "https://solobasket.com/feed/",                "color": "#ff7a00" },
+  { "id": "basketusa",         "name": "BasketUSA",             "feed": "https://basketusa.com/feed/",                 "color": "#264653" },
+  { "id": "basketeurope",      "name": "BasketEurope",          "feed": "https://www.basketeurope.com/latest/rss/",    "color": "#3a86ff" },
+  { "id": "lakersbrasil",      "name": "Lakers Brasil",         "feed": "https://lakersbrasil.com/feed/",              "color": "#552583" }
+]

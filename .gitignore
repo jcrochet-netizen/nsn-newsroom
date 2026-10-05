@@ -1,0 +1,4 @@
+# cache des comptages de mots (régénéré automatiquement)
+cache.json
+node_modules/
+.DS_Store

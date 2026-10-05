@@ -1,0 +1,6 @@
+{
+  "name": "nsn-newsroom",
+  "private": true,
+  "description": "Agrégateur RSS des sites NSN",
+  "scripts": { "start": "node server.js" }
+}

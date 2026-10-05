@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSN Newsroom</title>
+<style>
+  :root {
+    --bg: #f4f5f7; --panel: #ffffff; --text: #16181d; --muted: #6b7280; --line: #e5e7eb;
+    --hover: #f7f8fa; --accent: #111827; --read: #9aa0aa; --chip: #eef0f3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f1115; --panel: #171a21; --text: #e8eaee; --muted: #8b93a1; --line: #262b35;
+            --hover: #1d212a; --accent: #e8eaee; --read: #5b6270; --chip: #232833; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif; }
+  header { position: sticky; top: 0; z-index: 10; background: var(--panel); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
+  h1 { font-size: 16px; margin: 0 8px 0 0; letter-spacing: -.01em; }
+  h1 span { color: var(--muted); font-weight: 500; }
+  .tabs, .seg { display: inline-flex; background: var(--chip); border-radius: 8px; padding: 3px; }
+  .tabs button, .seg button { border: 0; background: transparent; color: var(--muted); padding: 6px 12px;
+         border-radius: 6px; font: inherit; font-weight: 600; cursor: pointer; }
+  .tabs button.on, .seg button.on { background: var(--panel); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+  .spacer { flex: 1; }
+  .btn { border: 1px solid var(--line); background: var(--panel); color: var(--text); padding: 6px 12px;
+         border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; }
+  .btn:hover { background: var(--hover); }
+  .btn.primary { background: var(--accent); color: var(--panel); border-color: var(--accent); }
+  label.chk { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); cursor: pointer; user-select: none; }
+  .status { color: var(--muted); font-size: 12px; }
+  .filters { display: flex; gap: 6px; padding: 0 16px 10px; flex-wrap: wrap; }
+  .fchip { --c: #888; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line);
+           background: var(--panel); color: var(--text); border-radius: 999px; padding: 3px 10px 3px 8px;
+           font: inherit; font-size: 12px; cursor: pointer; }
+  .fchip i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+  .fchip b { color: var(--muted); font-weight: 600; }
+  .fchip.off { opacity: .4; }
+  .fchip.err { border-color: #d33; }
+  main { padding: 16px; max-width: 1100px; margin: 0 auto; }
+  main.grid { max-width: none; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); align-items: start; }
+
+  .list { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .item { --c: #888; display: flex; gap: 12px; padding: 9px 14px 9px 12px; border-bottom: 1px solid var(--line);
+          border-left: 4px solid var(--c); align-items: flex-start; }
+  .item:last-child { border-bottom: 0; }
+  .item:hover { background: var(--hover); }
+  .thumb { flex: 0 0 104px; height: 66px; border-radius: 6px; background: var(--chip) center/cover no-repeat; }
+  .body { flex: 1; min-width: 0; }
+  .title { color: var(--text); text-decoration: none; font-weight: 650; font-size: 14.5px; }
+  .title:hover { text-decoration: underline; }
+  .item.read .title { color: var(--read); font-weight: 450; }
+  .item.read .thumb { opacity: .45; }
+  .meta { display: flex; gap: 8px; align-items: center; margin-top: 3px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+  .site { color: var(--c); font-weight: 700; }
+  .excerpt { margin-top: 4px; color: var(--muted); font-size: 13px; display: -webkit-box; -webkit-line-clamp: 2;
+             -webkit-box-orient: vertical; overflow: hidden; }
+  .item.read .excerpt { opacity: .7; }
+  .words { margin-left: auto; flex: 0 0 auto; font-variant-numeric: tabular-nums; font-size: 12px; font-weight: 700;
+           padding: 2px 8px; border-radius: 6px; background: var(--chip); color: var(--muted); white-space: nowrap; align-self: center; }
+  .words.w2 { color: #1f7a3d; background: rgba(46,160,67,.13); }
+  .words.w3 { color: #8a5a00; background: rgba(212,160,23,.18); }
+  .words.w4 { color: #b42318; background: rgba(217,45,32,.13); }
+  @media (prefers-color-scheme: dark) {
+    /* couleurs quasi noires (vRINGe) : invisibles sur fond sombre, on les éclaircit */
+    .item.very-dark { border-left-color: #9aa0aa; } .item.very-dark .site { color: var(--text); }
+    .widget[style*="--c:#111111"] { --c: #2b2f38 !important; }
+    .words.w2 { color: #6fdd8b; } .words.w3 { color: #f2c94c; } .words.w4 { color: #ff8a80; }
+  }
+  .compact .item { padding-top: 6px; padding-bottom: 6px; }
+  .compact .meta { display: inline-flex; margin: 0 0 0 8px; }
+  .compact .body { display: flex; align-items: baseline; flex-wrap: wrap; }
+
+  .widget { --c: #888; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .whead { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--c); color: var(--fg, #fff); }
+  .whead h2 { margin: 0; font-size: 14px; flex: 1; }
+  .whead a { color: inherit; opacity: .85; font-size: 12px; text-decoration: none; }
+  .whead .badge { background: color-mix(in srgb, currentColor 22%, transparent); border-radius: 999px; padding: 1px 8px; font-size: 12px; font-weight: 700; }
+  .whead button { background: color-mix(in srgb, currentColor 18%, transparent); color: inherit; border: 0; border-radius: 6px; padding: 3px 8px; font: inherit; font-size: 12px; cursor: pointer; }
+  .widget .list { border: 0; border-radius: 0; }
+  .widget .item { border-left-width: 0; padding-left: 12px; }
+  .widget .thumb { flex-basis: 84px; height: 54px; }
+  .empty { padding: 30px; text-align: center; color: var(--muted); }
+  .werr { padding: 12px; color: #d33; font-size: 12px; }
+
+  @media (max-width: 640px) {
+    main.grid { grid-template-columns: 1fr; }
+    .thumb { flex-basis: 76px; height: 52px; }
+    .bar { gap: 8px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1>NSN <span>Newsroom</span></h1>
+    <div class="tabs" role="tablist">
+      <button data-tab="all" class="on">Tous les articles</button>
+      <button data-tab="sites">Par site</button>
+    </div>
+    <div class="seg" title="Affichage">
+      <button data-view="compact">Titres</button>
+      <button data-view="full" class="on">Titre + extrait</button>
+    </div>
+    <label class="chk"><input type="checkbox" id="hideRead"> Masquer les lus</label>
+    <div class="spacer"></div>
+    <span class="status" id="status">Chargement…</span>
+    <button class="btn" id="refresh" title="Recharger les flux">↻</button>
+    <button class="btn primary" id="markAll">Mark all read</button>
+  </div>
+  <div class="filters" id="filters"></div>
+</header>
+<main id="main"><div class="empty">Chargement des flux…</div></main>
+
+<script>
+const $ = s => document.querySelector(s);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+let data = { sites: [], items: [], errors: {}, pending: 0 };
+let read = new Set(store.get('nsn.read', []));
+let ui = Object.assign({ tab: 'all', view: 'full', hideRead: false, hidden: [] }, store.get('nsn.ui', {}));
+const saveUi = () => store.set('nsn.ui', ui);
+const saveRead = () => {
+  // on ne garde que les ids encore présents + les 5000 derniers, pour ne pas grossir indéfiniment
+  const current = new Set(data.items.map(i => i.id));
+  const arr = [...read];
+  store.set('nsn.read', arr.filter(id => current.has(id)).concat(arr.filter(id => !current.has(id)).slice(-5000)));
+};
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmtN = n => n.toLocaleString('fr-FR');
+function ago(iso) {
+  if (!iso) return '';
+  const d = new Date(iso), s = (Date.now() - d) / 1000;
+  if (s < 60) return "à l'instant";
+  if (s < 3600) return `il y a ${Math.floor(s / 60)} min`;
+  if (s < 86400) return `il y a ${Math.floor(s / 3600)} h`;
+  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
+function wordsBadge(n) {
+  if (n == null) return `<span class="words" title="Comptage en cours">… mots</span>`;
+  const cls = n >= 1500 ? 'w4' : n >= 800 ? 'w3' : n >= 300 ? 'w2' : '';
+  return `<span class="words ${cls}" title="${fmtN(n)} mots">${fmtN(n)} mots</span>`;
+}
+// texte noir sur les couleurs claires (vert clair, jaune or…), blanc sinon
+function lum(hex) {
+  const n = parseInt(hex.slice(1), 16), lin = v => (v /= 255) <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4;
+  return .2126 * lin(n >> 16) + .7152 * lin((n >> 8) & 255) + .0722 * lin(n & 255);
+}
+const textOn = hex => lum(hex) > .3 ? '#16181d' : '#fff';
+const siteById = id => data.sites.find(s => s.id === id) || { name: id, color: '#888' };
+
+function itemHtml(it, showSite = true) {
+  const s = siteById(it.site), full = ui.view === 'full';
+  return `<div class="item ${read.has(it.id) ? 'read' : ''} ${textOn(s.color) === '#fff' && lum(s.color) < .02 ? 'very-dark' : ''}" style="--c:${s.color}" data-id="${esc(it.id)}">
+    ${full ? `<div class="thumb" style="${it.image ? `background-image:url('${esc(it.image)}')` : ''}"></div>` : ''}
+    <div class="body">
+      <a class="title" href="${esc(it.link)}" target="_blank" rel="noopener">${esc(it.title)}</a>
+      <div class="meta">${showSite ? `<span class="site">${esc(s.name)}</span>` : ''}<span>${ago(it.date)}</span></div>
+      ${full && it.excerpt ? `<div class="excerpt">${esc(it.excerpt)}</div>` : ''}
+    </div>
+    ${wordsBadge(it.words)}
+  </div>`;
+}
+
+function visible(items) { return ui.hideRead ? items.filter(i => !read.has(i.id)) : items; }
+
+function render() {
+  document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === ui.tab));
+  document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('on', b.dataset.view === ui.view));
+  $('#hideRead').checked = ui.hideRead;
+  const main = $('#main');
+  main.className = (ui.tab === 'sites' ? 'grid ' : '') + (ui.view === 'compact' ? 'compact' : '');
+
+  // pastilles de filtre / légende
+  $('#filters').innerHTML = data.sites.map(s => {
+    const unread = data.items.filter(i => i.site === s.id && !read.has(i.id)).length;
+    const err = data.errors[s.id];
+    return `<button class="fchip ${ui.tab === 'all' && ui.hidden.includes(s.id) ? 'off' : ''} ${err ? 'err' : ''}"
+      style="--c:${s.color}" data-site="${s.id}" title="${err ? 'Erreur flux : ' + esc(err) : (ui.tab === 'all' ? 'Afficher / masquer ce site' : '')}">
+      <i></i>${esc(s.name)} <b>${unread}</b></button>`;
+  }).join('');
+
+  if (!data.items.length) { main.innerHTML = `<div class="empty">Chargement des flux…</div>`; return; }
+
+  if (ui.tab === 'all') {
+    const items = visible(data.items.filter(i => !ui.hidden.includes(i.site)));
+    main.innerHTML = items.length ? `<div class="list">${items.map(i => itemHtml(i)).join('')}</div>`
+      : `<div class="list"><div class="empty">Rien de nouveau 🎉</div></div>`;
+  } else {
+    main.innerHTML = data.sites.map(s => {
+      const last10 = data.items.filter(i => i.site === s.id).slice(0, 10);
+      const items = visible(last10);
+      const unread = last10.filter(i => !read.has(i.id)).length;
+      const home = (() => { try { return new URL(last10[0]?.link || s.feed).origin; } catch { return '#'; } })();
+      return `<section class="widget" style="--c:${s.color};--fg:${textOn(s.color)}">
+        <div class="whead"><h2>${esc(s.name)}</h2><span class="badge" title="non lus">${unread}</span>
+          <a href="${esc(home)}" target="_blank" rel="noopener">↗</a>
+          <button data-mark-site="${s.id}">Tout lu</button></div>
+        ${data.errors[s.id] ? `<div class="werr">Flux indisponible : ${esc(data.errors[s.id])}</div>` : ''}
+        <div class="list">${items.length ? items.map(i => itemHtml(i, false)).join('') : '<div class="empty">Tout est lu</div>'}</div>
+      </section>`;
+    }).join('');
+  }
+}
+
+function setStatus() {
+  const t = data.fetchedAt ? new Date(data.fetchedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '–';
+  const unread = data.items.filter(i => !read.has(i.id)).length;
+  $('#status').textContent = `${fmtN(unread)} non lus · MAJ ${t}` + (data.pending ? ` · comptage de ${data.pending} articles…` : '');
+  document.title = unread ? `(${unread}) NSN Newsroom` : 'NSN Newsroom';
+}
+
+let pollTimer;
+async function load(force) {
+  clearTimeout(pollTimer);
+  try {
+    const res = await fetch('/api/items' + (force ? '?force=1' : ''));
+    data = await res.json();
+    render(); setStatus();
+  } catch (e) { $('#status').textContent = 'Serveur injoignable'; }
+  // on re-interroge vite tant que des comptages de mots sont en cours, sinon toutes les 5 min
+  pollTimer = setTimeout(load, data.pending ? 4000 : 5 * 60 * 1000);
+}
+
+function markRead(ids) {
+  ids.forEach(id => read.add(id));
+  saveRead(); render(); setStatus();
+}
+
+// ---------- événements ----------
+document.addEventListener('click', e => {
+  const tab = e.target.closest('[data-tab]');
+  if (tab) { ui.tab = tab.dataset.tab; saveUi(); return render(); }
+  const view = e.target.closest('[data-view]');
+  if (view) { ui.view = view.dataset.view; saveUi(); return render(); }
+  const chip = e.target.closest('.fchip');
+  if (chip && ui.tab === 'all') {
+    const id = chip.dataset.site;
+    if (e.altKey || e.metaKey) ui.hidden = data.sites.map(s => s.id).filter(x => x !== id); // ⌥/⌘-clic : ce site seul
+    else ui.hidden = ui.hidden.includes(id) ? ui.hidden.filter(x => x !== id) : [...ui.hidden, id];
+    if (ui.hidden.length === data.sites.length) ui.hidden = [];
+    saveUi(); return render();
+  }
+  const ms = e.target.closest('[data-mark-site]');
+  if (ms) return markRead(data.items.filter(i => i.site === ms.dataset.markSite).slice(0, 10).map(i => i.id));
+});
+// clic gauche ou clic molette sur un titre → marqué comme lu (le lien s'ouvre normalement)
+const onOpen = e => {
+  const a = e.target.closest('a.title');
+  if (!a || (e.type === 'auxclick' && e.button !== 1)) return;
+  const id = a.closest('.item').dataset.id;
+  setTimeout(() => markRead([id]), 0);
+};
+document.addEventListener('click', onOpen);
+document.addEventListener('auxclick', onOpen);
+
+$('#hideRead').addEventListener('change', e => { ui.hideRead = e.target.checked; saveUi(); render(); });
+$('#markAll').addEventListener('click', () => {
+  const scope = ui.tab === 'all' ? data.items.filter(i => !ui.hidden.includes(i.site)) : data.items;
+  markRead(scope.map(i => i.id));
+});
+$('#refresh').addEventListener('click', () => { $('#status').textContent = 'Rechargement…'; load(true); });
+setInterval(setStatus, 60000);
+setInterval(() => { if (!document.hidden) render(); }, 60000); // rafraîchit les « il y a X min »
+
+render();
+load();
+</script>
+</body>
+</html>
