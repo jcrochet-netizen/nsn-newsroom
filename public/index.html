@@ -47,7 +47,7 @@
           border-left: 4px solid var(--c); align-items: flex-start; }
   .item:last-child { border-bottom: 0; }
   .item:hover { background: var(--hover); }
-  .thumb { flex: 0 0 104px; height: 66px; border-radius: 6px; background: var(--chip) center/cover no-repeat; }
+  .thumb { flex: 0 0 104px; width: 104px; height: 66px; border-radius: 6px; background: var(--chip); object-fit: cover; }
   .body { flex: 1; min-width: 0; }
   .title { color: var(--text); text-decoration: none; font-weight: 650; font-size: 14.5px; }
   .title:hover { text-decoration: underline; }
@@ -81,13 +81,13 @@
   .whead button { background: color-mix(in srgb, currentColor 18%, transparent); color: inherit; border: 0; border-radius: 6px; padding: 3px 8px; font: inherit; font-size: 12px; cursor: pointer; }
   .widget .list { border: 0; border-radius: 0; }
   .widget .item { border-left-width: 0; padding-left: 12px; }
-  .widget .thumb { flex-basis: 84px; height: 54px; }
+  .widget .thumb { flex-basis: 84px; width: 84px; height: 54px; }
   .empty { padding: 30px; text-align: center; color: var(--muted); }
   .werr { padding: 12px; color: #d33; font-size: 12px; }
 
   @media (max-width: 640px) {
     main.grid { grid-template-columns: 1fr; }
-    .thumb { flex-basis: 76px; height: 52px; }
+    .thumb { flex-basis: 76px; width: 76px; height: 52px; }
     .bar { gap: 8px; }
   }
 </style>
@@ -157,7 +157,9 @@ const siteById = id => data.sites.find(s => s.id === id) || { name: id, color: '
 function itemHtml(it, showSite = true) {
   const s = siteById(it.site), full = ui.view === 'full';
   return `<div class="item ${read.has(it.id) ? 'read' : ''} ${textOn(s.color) === '#fff' && lum(s.color) < .02 ? 'very-dark' : ''}" style="--c:${s.color}" data-id="${esc(it.id)}">
-    ${full ? `<div class="thumb" style="${it.image ? `background-image:url('${esc(it.image)}')` : ''}"></div>` : ''}
+    ${full ? (it.image
+      ? `<img class="thumb" src="${esc(it.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.removeAttribute('src')">`
+      : `<div class="thumb"></div>`) : ''}
     <div class="body">
       <a class="title" href="${esc(it.link)}" target="_blank" rel="noopener">${esc(it.title)}</a>
       <div class="meta">${showSite ? `<span class="site">${esc(s.name)}</span>` : ''}<span>${ago(it.date)}</span></div>
