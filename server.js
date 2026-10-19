@@ -8,7 +8,8 @@ const REFRESH_MS = 5 * 60 * 1000;
 const MAX_ITEMS_PER_SITE = 30;
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36 NSN-Newsroom';
 const CACHE_FILE = path.join(__dirname, 'cache.json');
-const SITES = JSON.parse(fs.readFileSync(path.join(__dirname, 'sites.json'), 'utf8'));
+// les sites marqués "archived": true (sites fermés) ne sont plus lus ni affichés
+const SITES = JSON.parse(fs.readFileSync(path.join(__dirname, 'sites.json'), 'utf8')).filter(s => !s.archived);
 
 // Articles exclus : titre contenant un de ces mots-clés (mot entier, insensible à la casse)
 function loadExcludeRe() {

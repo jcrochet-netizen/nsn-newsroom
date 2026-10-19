@@ -13,7 +13,7 @@ Puis ouvrir http://localhost:4317
 - Les vues « Titres » et « Titre + extrait » (avec miniature) se changent en haut de la page. Un clic sur un titre ouvre l'article et le marque comme lu. « Mark all read » marque tout comme lu.
 - Le nombre de mots est coloré : gris < 300, vert 300–799, jaune 800–1499, rouge ≥ 1500.
 
-Les sites, leurs flux et leurs couleurs sont dans `sites.json`. Les flux se rechargent toutes les 5 minutes. Pour les flux sans texte intégral (Sports Mole, vRINGe), le serveur lit la page de l'article pour compter les mots ; le résultat est mis en cache dans `cache.json`. L'état « lu » est enregistré dans le navigateur (localStorage).
+Les sites, leurs flux et leurs couleurs sont dans `sites.json`. Pour archiver un site fermé sans le supprimer, ajoute `"archived": true` sur sa ligne (actuellement : vRINGe, Al Aire Libre, Solobasket, Calcio d'Angolo). Les flux se rechargent toutes les 5 minutes. Pour les flux sans texte intégral (Sports Mole, vRINGe), le serveur lit la page de l'article pour compter les mots ; le résultat est mis en cache dans `cache.json`. L'état « lu » est enregistré dans le navigateur (localStorage).
 
 ## Filtre
 
