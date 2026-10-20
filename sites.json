@@ -3,7 +3,7 @@
   { "id": "afrik-foot-ng",     "name": "Afrik-Foot NG",         "feed": "https://afrik-foot.com/en-ng/feed/",          "color": "#008751" },
   { "id": "afrik-foot-za",     "name": "Afrik-Foot ZA",         "feed": "https://afrik-foot.com/en-za/feed/",          "color": "#7b4a2a" },
   { "id": "alairelibre",       "name": "Al Aire Libre",         "feed": "https://alairelibre.cl/feed/",                "color": "#1cc7c1", "archived": true },
-  { "id": "soccernet",         "name": "Soccernet",             "feed": "https://soccernet.ng/feed/",                  "color": "#2a9d8f" },
+  { "id": "soccernet",         "name": "Soccernet",             "feed": "https://soccernet.ng/feed/",                  "color": "#2a9d8f", "archived": true },
   { "id": "topmercato",        "name": "TopMercato",            "feed": "https://topmercato.com/feed/",                "color": "#c1121f" },
   { "id": "footballwhispers",  "name": "Football Whispers",     "feed": "https://footballwhispers.com/feed/",          "color": "#8d939c" },
   { "id": "sportsmole",        "name": "Sports Mole",           "feed": "https://www.sportsmole.co.uk/rss.xml",        "color": "#006a4e" },
