@@ -23,6 +23,6 @@ Les articles dont le titre contient un des mots-clés de `filters.json` (`exclud
 
 https://jcrochet-netizen.github.io/nsn-newsroom/
 
-Le workflow `.github/workflows/pages.yml` lance `node build.js` toutes les 20 minutes (et à chaque push sur `main`) : il lit les flux, calcule les nombres de mots et publie `dist/` (la page et `data.json`) sur GitHub Pages. Pour forcer une mise à jour : onglet **Actions** → « Publier sur GitHub Pages » → **Run workflow**.
+Le workflow `.github/workflows/pages.yml` lance `node build.js` toutes les 15 minutes, déclenché par une tâche cron-job.org (la planification interne de GitHub, toutes les 20 min, sert de secours) et à chaque push sur `main` : il lit les flux, calcule les nombres de mots et publie `dist/` (la page et `data.json`) sur GitHub Pages. Pour forcer une mise à jour : onglet **Actions** → « Publier sur GitHub Pages » → **Run workflow**.
 
 La page en ligne est publique. L'état « lu » reste enregistré dans chaque navigateur.
